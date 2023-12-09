@@ -6,6 +6,11 @@ class VortaroSpider(scrapy.Spider):
     name = "vortaro"
     allowed_domains = ["io.wiktionary.org"]
     start_urls = ["https://io.wiktionary.org/wiki/Kategorio:Idala_vorti"]
+    custom_settings = {
+        'FEEDS': {
+            'vortaro.json': {'format': 'json', 'overwrite': True},
+        }
+    }
 
     def parse(self, response):
         # Kolektez omna ligili di vorta secioni
@@ -58,7 +63,9 @@ class VortaroSpider(scrapy.Spider):
             )
 
     def parse_vorto(self, response):
+        # Kreez variablo datumo di tipo Item por futura netigado
         datumo = WikivortaraSkrapiloItem()
+        # Insertez omna datumo en la variablo datumo
         datumo["nomo"] = response.xpath(
             '//h1[@id="firstHeading"]/span/text()'
         ).get()
@@ -95,6 +102,7 @@ class VortaroSpider(scrapy.Spider):
             elif "Rusiana" in traduko.get():
                 datumo["rusiana"] = traduko.get()
 
+        # Kreez la strukturo finala de la kolektita datumi
         vorto = {
             "nomo": datumo["nomo"],
             "semantiko": datumo["semantiko"],
