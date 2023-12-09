@@ -8,7 +8,7 @@ class VortaroSpider(scrapy.Spider):
     start_urls = ["https://io.wiktionary.org/wiki/Kategorio:Idala_vorti"]
     custom_settings = {
         'FEEDS': {
-            'rezulto/vortaro.json': {'format': 'json', 'overwrite': True},
+            'resulto/vortaro.json': {'format': 'json', 'overwrite': True},
         }
     }
 

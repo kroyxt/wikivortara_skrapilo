@@ -7,7 +7,7 @@ Por skrapar la pagino de Wikivortaro uzez la sequanta komando:
 
 `scrapy crawl vortaro`
 
-La rezulto de ica skripto trovesos en la dosierujo rezulto.
+La resulto de ica skripto trovesos en la dosierujo `resulto/`.
 
 
 ## Por facor:
