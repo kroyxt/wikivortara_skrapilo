@@ -1,4 +1,5 @@
 import scrapy
+from wikivortara_skrapilo.items import WikivortaraSkrapiloItem
 
 
 class VortaroSpider(scrapy.Spider):
@@ -57,4 +58,58 @@ class VortaroSpider(scrapy.Spider):
             )
 
     def parse_vorto(self, response):
-        pass
+        datumo = WikivortaraSkrapiloItem()
+        datumo["nomo"] = response.xpath(
+            '//h1[@id="firstHeading"]/span/text()'
+        ).get()
+
+        vorta_datumi = response.xpath(
+            "//div[@class='mw-content-ltr mw-parser-output']/table[@border='1']/tbody/tr/td/ul/li"
+        )
+        for vorta_datumo in vorta_datumi:
+            if "Semantiko" in vorta_datumo.get():
+                datumo["semantiko"] = vorta_datumo.get()
+            elif "Morfologio" in vorta_datumo.get():
+                datumo["morfologio"] = vorta_datumo.get()
+            elif "Exemplaro" in vorta_datumo.get():
+                datumo["exemplaro"] = vorta_datumo.get()
+            elif "Sinonimo" in vorta_datumo.get():
+                datumo["sinonimo"] = vorta_datumo.get()
+            elif "Antonimo" in vorta_datumo.get():
+                datumo["antonimo"] = vorta_datumo.get()
+
+        traduki = response.xpath(
+            "//div[@class='mw-content-ltr mw-parser-output']/table[@border='1']/tbody/tr/td[@bgcolor='#f9f9f9']/table/tbody/tr/td/ul/li"
+        )
+        for traduko in traduki:
+            if "Angliana" in traduko.get():
+                datumo["angliana"] = traduko.get()
+            elif "Franciana" in traduko.get():
+                datumo["franciana"] = traduko.get()
+            elif "Germaniana" in traduko.get():
+                datumo["germaniana"] = traduko.get()
+            elif "Hispaniana" in traduko.get():
+                datumo["hispaniana"] = traduko.get()
+            elif "Italiana" in traduko.get():
+                datumo["italiana"] = traduko.get()
+            elif "Rusiana" in traduko.get():
+                datumo["rusiana"] = traduko.get()
+
+        vorto = {
+            "nomo": datumo["nomo"],
+            "semantiko": datumo["semantiko"],
+            "morfologio": datumo["morfologio"],
+            "exemplaro": datumo["exemplaro"],
+            "sinonimo": datumo["sinonimo"],
+            "antonimo": datumo["antonimo"],
+            "traduki": {
+                "angliana": datumo["angliana"],
+                "franciana": datumo["franciana"],
+                "germaniana": datumo["germaniana"],
+                "hispaniana": datumo["hispaniana"],
+                "italiana": datumo["italiana"],
+                "rusiana": datumo["rusiana"]
+            }
+        }
+
+        yield vorto
